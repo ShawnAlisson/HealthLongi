@@ -1,24 +1,46 @@
 import Foundation
 
-/// Switch AI providers here. Change `.openRouter` back to `.glm` anytime.
 enum AIProvider: String, Sendable {
     case glm
-    case openRouter
+    case openRouterFree
+    case openRouterBedrock
 }
 
 enum AppConfig {
-    static let aiProvider: AIProvider = .openRouter
+    /// Resolved from AI_PROVIDER in Secrets.xcconfig. Falls back to openRouterFree.
+    static var aiProvider: AIProvider {
+        let raw = (Bundle.main.object(forInfoDictionaryKey: "AI_PROVIDER") as? String)
+            ?? ProcessInfo.processInfo.environment["AI_PROVIDER"]
+            ?? ""
+        switch raw.trimmingCharacters(in: .whitespacesAndNewlines).lowercased() {
+        case "glm":               return .glm
+        case "openrouter_bedrock": return .openRouterBedrock
+        default:                  return .openRouterFree
+        }
+    }
 
-    /// OpenRouter model slug — must be available on your BYOK provider.
-    /// Cheapest Bedrock option: Nova Micro (~$0.035/M in, $0.14/M out). Enable in AWS Bedrock console.
-    static let openRouterModel = "amazon/nova-micro-v1"
+    // MARK: - OpenRouter: free tier
+    static let openRouterFreeModel = "openrouter/free"
+    static let openRouterFreeProviderOnly: [String]? = nil
+    static let openRouterFreeAllowFallbacks = true
 
-    /// Pin routing to your BYOK provider. Use `["amazon-bedrock"]` when BYOK is AWS Bedrock.
-    /// Prevents fallback to OpenRouter's paid pool when you have no credits.
-    static let openRouterProviderOnly: [String]? = ["amazon-bedrock"]
+    // MARK: - OpenRouter: AWS Bedrock BYOK
+    static let openRouterBedrockModel = "amazon/nova-micro-v1"
+    static let openRouterBedrockProviderOnly: [String]? = ["amazon-bedrock"]
+    static let openRouterBedrockAllowFallbacks = false
 
-    /// When false, OpenRouter won't fall back to its own credits if BYOK fails.
-    static let openRouterAllowFallbacks = false
+    // MARK: - Convenience accessors (resolved from aiProvider)
+    static var openRouterModel: String {
+        aiProvider == .openRouterBedrock ? openRouterBedrockModel : openRouterFreeModel
+    }
+
+    static var openRouterProviderOnly: [String]? {
+        aiProvider == .openRouterBedrock ? openRouterBedrockProviderOnly : openRouterFreeProviderOnly
+    }
+
+    static var openRouterAllowFallbacks: Bool {
+        aiProvider == .openRouterBedrock ? openRouterBedrockAllowFallbacks : openRouterFreeAllowFallbacks
+    }
 
     static let openRouterReferer = "https://github.com/pahlavan/HealthLongi"
     static let openRouterAppTitle = "Vitals & Mind"

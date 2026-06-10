@@ -6,7 +6,7 @@ enum AISummaryServiceFactory {
         let service: ChatCompletionAIService = switch AppConfig.aiProvider {
         case .glm:
             ChatCompletionAIService(configuration: .glm(), session: session)
-        case .openRouter:
+        case .openRouterFree, .openRouterBedrock:
             ChatCompletionAIService(configuration: .openRouter(), session: session)
         }
 
