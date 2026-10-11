@@ -1,10 +1,10 @@
 # HealthLongi
 
-**Vitals & Mind** - iOS health risk assessment app using HealthKit data and AI analysis.
+**HealthLongi** - iOS health risk assessment app using HealthKit data and AI analysis.
 
 ## Overview
 
-Vitals & Mind is a privacy-focused iOS app that reads health data from Apple Health (steps, heart rate, sleep) and combines it with mental health assessments to calculate comprehensive health risk profiles. All data processing happens on-device, with raw health data never leaving the device.
+HealthLongi is a privacy-focused iOS app that reads health data from Apple Health (steps, heart rate, sleep) and combines it with mental health assessments to calculate comprehensive health risk profiles. All data processing happens on-device, with raw health data never leaving the device.
 
 ## Features
 
@@ -50,6 +50,7 @@ HealthLongi/
 ### Key Components
 
 **Models:**
+
 - `UserProfile`: User demographics and preferences
 - `RiskAssessment`: Stored assessment results
 - `AbstractedRiskProfile`: Calculated risk profile
@@ -58,6 +59,7 @@ HealthLongi/
 - `WeeklyHealthSnapshot`: Weekly health data summary
 
 **Services:**
+
 - `HealthKitManager`: HealthKit data provider
 - `MockHealthDataProvider`: Testing data provider
 - `GLMService`: AI summarization service
@@ -65,6 +67,7 @@ HealthLongi/
 - `AssessmentOrchestrator`: Assessment workflow coordinator
 
 **Protocols:**
+
 - `HealthDataProviding`: Health data source abstraction
 - `RiskCalculating`: Risk calculation abstraction
 - `AISummarizing`: AI service abstraction
@@ -90,31 +93,38 @@ HealthLongi/
 ### Installation
 
 1. Clone repository:
+
 ```bash
-git clone https://github.com/yourusername/HealthLongi.git
+git clone https://github.com/alinjfz/HealthLongi.git
 cd HealthLongi
 ```
 
 2. Open in Xcode:
+
 ```bash
 open HealthLongi.xcodeproj
 ```
 
 3. Configure API key:
-- Copy `Config/Secrets.xcconfig.example` to `Config/Secrets.xcconfig`
-- Add your GLM API key:
+
+- Copy `HealthLongi/Config/Secrets.example.xcconfig` to `HealthLongi/Config/Secrets.xcconfig`.
+- Set `GLM_API_KEY` in the copied file.
+
 ```bash
 GLM_API_KEY = your_key_here
 ```
+
 Or set as environment variable: `GLM_API_KEY=your_key`
 
 4. Build and run:
+
 - Select your device/simulator
 - Press ⌘R to build and run
 
 ### HealthKit Permissions
 
 The app requires the following HealthKit permissions:
+
 - Steps (QuantityType)
 - Heart Rate (QuantityType)
 - Sleep Analysis (CategoryType)
@@ -169,6 +179,7 @@ xcodebuild test -scheme HealthLongi -only-testing:HealthLongiTests/RiskCalculato
 ### Mock Data
 
 Generate mock health data for testing:
+
 ```bash
 python3 scripts/mock_health_data.py
 ```
@@ -176,6 +187,7 @@ python3 scripts/mock_health_data.py
 ### Test Scenarios
 
 The app includes predefined test scenarios:
+
 - `high_anxiety_dropping_steps`: High anxiety with declining activity
 - `low_risk_active`: Healthy, active user
 - `metabolic_moderate_sedentary`: Moderate metabolic risk, sedentary
@@ -201,6 +213,7 @@ The app includes predefined test scenarios:
 ### Dependency Injection
 
 Use `AppDependencies` for service injection:
+
 ```swift
 @Environment(\.appDependencies) var dependencies
 let healthDataProvider = dependencies.healthDataProvider
@@ -209,6 +222,7 @@ let healthDataProvider = dependencies.healthDataProvider
 ## HealthKit Integration
 
 The app uses `HealthKitManager` to read:
+
 - **Steps**: Weekly step count with prior week comparison
 - **Heart Rate**: Resting heart rate average
 - **Sleep**: Average sleep hours per night
@@ -220,6 +234,7 @@ Permissions are requested on first launch and stored in `HealthLongi.entitlement
 ### GLM API
 
 The app uses GLM API for health summaries:
+
 - Configured via `GLM_API_KEY` in Secrets.xcconfig
 - Prompts defined in `GLMPrompts.swift`
 - Results cached in `AISummaryResult` model
@@ -227,6 +242,7 @@ The app uses GLM API for health summaries:
 ### Prompt Engineering
 
 Prompts follow these principles:
+
 - Anonymize health data before sending
 - Focus on actionable insights
 - Include NHS resource recommendations
@@ -235,6 +251,7 @@ Prompts follow these principles:
 ## NHS Resources
 
 The app provides NHS links based on risk profile:
+
 - Mental health services
 - Heart health information
 - Diabetes prevention
@@ -249,23 +266,14 @@ The app provides NHS links based on risk profile:
 4. Add tests for new features
 5. Submit pull request
 
-## License
-
-[Add your license here]
-
 ## Credits
 
 Built with:
+
 - SwiftUI and SwiftData
 - HealthKit framework
 - GLM API
 - NHS health resources
-
-## Support
-
-For issues and questions:
-- GitHub Issues: [repository link]
-- Email: [support email]
 
 ---
 
